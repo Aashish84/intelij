@@ -5,17 +5,21 @@ import com.asis.blog.entity.Address;
 import com.asis.blog.mapper.AddressMapper;
 import com.asis.blog.repository.AddressRepository;
 import com.asis.blog.service.AddressService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
-    private final AddressMapper addressMapper = AddressMapper.INSTANCE;
+    private final AddressMapper addressMapper;
+
+    public AddressServiceImpl(AddressRepository addressRepository, AddressMapper addressMapper) {
+        this.addressRepository = addressRepository;
+        this.addressMapper = addressMapper;
+    }
+
 
     @Override
     public List<AddressDto> getAllAddress() {

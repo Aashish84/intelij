@@ -6,17 +6,19 @@ import com.asis.blog.exception.CustomException;
 import com.asis.blog.mapper.BlogMapper;
 import com.asis.blog.repository.BlogRepository;
 import com.asis.blog.service.BlogService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
-    private final BlogMapper blogMapper = BlogMapper.INSTANCE;
+    private final BlogMapper blogMapper;
+    public BlogServiceImpl(BlogRepository blogRepository, BlogMapper blogMapper) {
+        this.blogRepository = blogRepository;
+        this.blogMapper = blogMapper;
+    }
     @Override
     public List<BlogDto> getAllBlog() {
         List<Blog> allBlog = blogRepository.findAll();

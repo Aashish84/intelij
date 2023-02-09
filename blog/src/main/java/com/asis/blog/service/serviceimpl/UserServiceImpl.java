@@ -6,17 +6,21 @@ import com.asis.blog.exception.CustomException;
 import com.asis.blog.mapper.UserMapper;
 import com.asis.blog.repository.UserRepository;
 import com.asis.blog.service.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper = UserMapper.INSTANCE;
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
+
     @Override
     public List<UserDto> getAllUser() {
         List<User> allUser = userRepository.findAll();

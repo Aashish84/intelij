@@ -1,24 +1,30 @@
 package com.asis.blog.mapper;
 
 import com.asis.blog.dto.BlogDto;
+import com.asis.blog.dto.UserDto;
 import com.asis.blog.entity.Blog;
+import com.asis.blog.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {CommentMapper.class , CustomUserMapper.class})
+@Mapper(uses = {CommentMapper.class} , componentModel = "spring")
 public interface BlogMapper {
-    BlogMapper INSTANCE = Mappers.getMapper(BlogMapper.class);
     @Mapping(source = "blog.id" , target = "blogId")
     @Mapping(source = "blog.comments", target = "commentDtos")
-    @Mapping(source ="blog.user" ,target = "userDto")
+    @Mapping(source ="blog.user" ,target = "userDto" , qualifiedByName = "customUserBlogMapper")
     BlogDto entityToDto (Blog blog);
-    @Mapping(source = "blogDto.blogId" , target = "id")
-    @Mapping(source = "blogDto.commentDtos" , target = "comments")
-    @Mapping(source = "blogDto.userDto" ,target = "user")
-    Blog dtoToEntity (BlogDto blogDto);
-
     List<BlogDto> entitiesToDto (List<Blog> blogs);
+
+//    custom entityToUser
+    @Named("customUserBlogMapper")
+    @Mapping(source ="user.id" , target ="userId" )
+    @Mapping(target = "email" , ignore = true)
+//    @Mapping(source = "user.blogs",target = "blogDtos")
+    /*
+    * above line will bring StackOverflowError as when adding blog to user it will go on loop
+    * */
+    UserDto entityToDtoUser (User user);
 }

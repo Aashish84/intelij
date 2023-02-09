@@ -16,58 +16,16 @@ import java.util.*;
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BlogRepository blogRepository;
-    private final CommentMapper commentMapper = CommentMapper.INSTANCE;
+   private final CommentMapper commentMapper;
 
-    public CommentServiceImpl(CommentRepository commentRepository, BlogRepository blogRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, BlogRepository blogRepository, CommentMapper commentMapper) {
         this.commentRepository = commentRepository;
         this.blogRepository = blogRepository;
+        this.commentMapper = commentMapper;
     }
-
-    private Map<Long , List<Long>> map = new HashMap<>();
-
-    public void test(List<Comment> comments , Long parentId){
-        for(int i = 0 ; i < comments.size() ; i++){
-            Comment comment = comments.get(i);
-            test(comment.getComments() , parentId);
-            List<Long> longs = map.get(parentId);
-            longs.add(comment.getId());
-            map.put(parentId , longs);
-        }
-    }
-
     @Override
     public List<CommentDto> getAllComment() {
-        List<Comment> allComment = commentRepository.findAll();
-
-        for(int i = 0 ; i < allComment.size() ; i++){
-            Long parentId = allComment.get(i).getId();
-            map.put(parentId , new ArrayList<>());
-            test(allComment.get(i).getComments() , parentId);
-        }
-
-//        sorting map on the basis of size map value list
-        List<Map.Entry<Long,List<Long>>> mapList = new LinkedList<>(map.entrySet());
-        Collections.sort(mapList , new Comparator<Map.Entry<Long, List<Long>>>() {
-            @Override
-            public int compare(Map.Entry<Long, List<Long>> o1, Map.Entry<Long, List<Long>> o2) {
-                return o2.getValue().size() - o1.getValue().size();
-            }
-        });
-        map = new LinkedHashMap<>();
-        for(Map.Entry<Long , List<Long>> tmp : mapList){
-            map.put(tmp.getKey() , tmp.getValue());
-        }
-//        sorting complete
-        for(Map.Entry<Long , List<Long>> entry : map.entrySet()){
-            for(Long id : entry.getValue()){
-                for(int i = 0 ; i < allComment.size() ; i++){
-                    Long commentId = allComment.get(i).getId();
-                    if(id == commentId){
-                        allComment.remove(i);
-                    }
-                }
-            }
-        }
+        List<Comment> allComment = commentRepository.findCommentWithoutChild();
         return commentMapper.entitiesToDtos(allComment);
     }
 
