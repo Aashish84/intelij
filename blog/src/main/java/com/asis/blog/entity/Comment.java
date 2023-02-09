@@ -20,7 +20,7 @@ public class Comment {
     private Timestamp createdAt;
     @OneToOne
     private User user;
-    @OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE , orphanRemoval = true)
     @JoinTable(
             name = "reply",
             joinColumns = @JoinColumn(name = "comment_id"),

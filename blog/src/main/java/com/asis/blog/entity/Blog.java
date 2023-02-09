@@ -14,16 +14,16 @@ import java.util.List;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-    public String title;
-    public String description;
+    private Long id;
+    private String title;
+    private String description;
     @CreationTimestamp
-    public Timestamp createdAt;
+    private Timestamp createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<Comment> comments;
+    @OneToMany(cascade = CascadeType.REMOVE , orphanRemoval = true)
+    private List<Comment> comments;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    public User user;
+    private User user;
 }

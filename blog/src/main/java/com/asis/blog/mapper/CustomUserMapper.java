@@ -14,11 +14,9 @@ public interface CustomUserMapper {
 
     @Mapping(target = "email", ignore = true)
     @Mapping(source = "id", target = "userId")
-    @Mapping(source = "name", target = "userName")
     UserDto entityToDto(User user);
 
     @Mapping(source = "userId", target = "id")
-    @Mapping(source = "userName", target = "name")
     User dtoToEntity(UserDto userDto);
 
     List<UserDto> entitiesToDtos(List<User> users);

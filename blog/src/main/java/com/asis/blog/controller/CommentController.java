@@ -38,4 +38,13 @@ public class CommentController {
     public ResponseEntity<?> deleteCommentFromComment(@PathVariable("id") Long id){
         return new ResponseEntity<>(commentService.deleteCommentFromComment(id) , HttpStatus.OK);
     }
+    @DeleteMapping("/comments/blog/{id}")
+    public ResponseEntity<?> deleteCommentFromBlog(@PathVariable("id") Long id){
+        return new ResponseEntity<>(commentService.deleteCommentFromBlog(id) , HttpStatus.OK);
+    }
+
+    @PatchMapping("/comments/{id}")
+    public ResponseEntity<?> updateComment(@PathVariable("id") Long id , @RequestBody Comment comment){
+        return new ResponseEntity<>(commentService.updateComment(id , comment) , HttpStatus.OK);
+    }
 }

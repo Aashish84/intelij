@@ -18,6 +18,6 @@ public class User {
     private String email;
     @OneToOne
     private Address address;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE , orphanRemoval = true)
     private List<Blog> blogs;
 }

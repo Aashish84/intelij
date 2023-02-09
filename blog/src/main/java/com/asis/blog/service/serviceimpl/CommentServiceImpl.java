@@ -10,8 +10,7 @@ import com.asis.blog.repository.CommentRepository;
 import com.asis.blog.service.CommentService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -24,9 +23,51 @@ public class CommentServiceImpl implements CommentService {
         this.blogRepository = blogRepository;
     }
 
+    private Map<Long , List<Long>> map = new HashMap<>();
+
+    public void test(List<Comment> comments , Long parentId){
+        for(int i = 0 ; i < comments.size() ; i++){
+            Comment comment = comments.get(i);
+            test(comment.getComments() , parentId);
+            List<Long> longs = map.get(parentId);
+            longs.add(comment.getId());
+            map.put(parentId , longs);
+        }
+    }
+
     @Override
     public List<CommentDto> getAllComment() {
         List<Comment> allComment = commentRepository.findAll();
+
+        for(int i = 0 ; i < allComment.size() ; i++){
+            Long parentId = allComment.get(i).getId();
+            map.put(parentId , new ArrayList<>());
+            test(allComment.get(i).getComments() , parentId);
+        }
+
+//        sorting map on the basis of size map value list
+        List<Map.Entry<Long,List<Long>>> mapList = new LinkedList<>(map.entrySet());
+        Collections.sort(mapList , new Comparator<Map.Entry<Long, List<Long>>>() {
+            @Override
+            public int compare(Map.Entry<Long, List<Long>> o1, Map.Entry<Long, List<Long>> o2) {
+                return o2.getValue().size() - o1.getValue().size();
+            }
+        });
+        map = new LinkedHashMap<>();
+        for(Map.Entry<Long , List<Long>> tmp : mapList){
+            map.put(tmp.getKey() , tmp.getValue());
+        }
+//        sorting complete
+        for(Map.Entry<Long , List<Long>> entry : map.entrySet()){
+            for(Long id : entry.getValue()){
+                for(int i = 0 ; i < allComment.size() ; i++){
+                    Long commentId = allComment.get(i).getId();
+                    if(id == commentId){
+                        allComment.remove(i);
+                    }
+                }
+            }
+        }
         return commentMapper.entitiesToDtos(allComment);
     }
 
@@ -80,12 +121,57 @@ public class CommentServiceImpl implements CommentService {
     }
     @Override
     public String deleteCommentFromComment(Long id) {
-        Comment findById = commentRepository.findById(id).get();
-        for(Comment comment : findById.getComments()){
-            deleteCommentFromComment(comment.getId());
+        Comment commentParent = commentRepository.findCommentParent(id);
+
+        if (commentParent != null) {
+//        comments after deleting child
+            commentParent.setComments(removeFromList(id , commentParent.getComments()));
+            commentRepository.save(commentParent);
+            commentRepository.deleteById(id);
+            return "comment deleted from parent of id : "+id;
         }
-            System.out.println(id);
         commentRepository.deleteById(id);
-        return "comment and its reply deleted";
+        return "comment of id : "+id+" deleted";
     }
+
+    @Override
+    public String deleteCommentFromBlog(Long id) {
+        Blog blogParent = blogRepository.findCommentParent(id);
+
+        if(blogParent != null){
+           blogParent.setComments(removeFromList(id , blogParent.getComments()));
+            blogRepository.save(blogParent);
+            blogRepository.deleteById(id);
+            return "comment deleted from parent of id : "+id;
+        }
+
+        commentRepository.deleteById(id);
+        return "comment of id : "+id+" deleted";
+    }
+
+    @Override
+    public CommentDto updateComment(Long id , Comment comment) {
+        Optional<Comment> commentById = commentRepository.findById(id);
+        if(commentById.isPresent()){
+            Comment c = commentById.get();
+            comment.setComments(c.getComments());
+            comment.setCreatedAt(c.getCreatedAt());
+            comment.setId(c.getId());
+            comment.setUser(c.getUser());
+            Comment newComment = commentRepository.save(comment);
+            return commentMapper.entityToDto(newComment);
+        }
+        return null;
+    }
+
+    private List<Comment> removeFromList(Long id , List<Comment> comments){
+        for (int i = 0 ; i < comments.size() ; i++){
+            if(comments.get(i).getId() == id){
+                comments.remove(i);
+            }
+        }
+        return comments;
+    }
+
+
 }

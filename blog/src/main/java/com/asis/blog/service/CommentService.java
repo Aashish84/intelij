@@ -12,4 +12,6 @@ public interface CommentService {
     CommentDto addCommentToComment(Long id , CommentDto commentDto) throws CustomException;
     List<CommentDto> addCommentToBlog(Long id , CommentDto commentDto) throws CustomException;
     String deleteCommentFromComment(Long id);
+    String deleteCommentFromBlog(Long id);
+    CommentDto updateComment(Long id , Comment comment);
 }

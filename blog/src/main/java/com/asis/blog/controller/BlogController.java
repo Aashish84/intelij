@@ -1,7 +1,7 @@
 package com.asis.blog.controller;
 
-import com.asis.blog.dto.BlogDto;
 import com.asis.blog.entity.Blog;
+import com.asis.blog.exception.CustomException;
 import com.asis.blog.service.BlogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,5 +24,10 @@ public class BlogController {
     @DeleteMapping("/blogs/{id}")
     public ResponseEntity<?> deleteBLog(@PathVariable("id") Long id){
         return new ResponseEntity<>( blogService.deleteBlog(id), HttpStatus.OK);
+    }
+
+    @PatchMapping("/blogs/{id}")
+    public ResponseEntity<?> updateBlog(@PathVariable("id") Long id , @RequestBody Blog blog) throws CustomException {
+        return new ResponseEntity<>(blogService.updateBlog(id , blog) , HttpStatus.OK);
     }
 }
