@@ -11,4 +11,6 @@ public interface BlogService {
     BlogDto addBlog(Blog blog);
     String deleteBlog(Long id);
     BlogDto updateBlog(Long id ,Blog bLog) throws CustomException;
+    boolean deleteCommentFromParentBlog (Long childCommentId) throws CustomException;
+    Blog findBlogById(Long blogId)throws CustomException;
 }

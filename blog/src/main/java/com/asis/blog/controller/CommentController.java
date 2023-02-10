@@ -39,7 +39,7 @@ public class CommentController {
         return new ResponseEntity<>(commentService.deleteCommentFromComment(id) , HttpStatus.OK);
     }
     @DeleteMapping("/comments/blog/{id}")
-    public ResponseEntity<?> deleteCommentFromBlog(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteCommentFromBlog(@PathVariable("id") Long id) throws CustomException {
         return new ResponseEntity<>(commentService.deleteCommentFromBlog(id) , HttpStatus.OK);
     }
 
