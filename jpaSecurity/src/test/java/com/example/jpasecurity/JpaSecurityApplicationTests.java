@@ -1,10 +1,10 @@
-package com.example.demodto;
+package com.example.jpasecurity;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoDtoApplicationTests {
+class JpaSecurityApplicationTests {
 
     @Test
     void contextLoads() {
