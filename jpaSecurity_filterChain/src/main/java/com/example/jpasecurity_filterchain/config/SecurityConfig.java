@@ -1,32 +1,32 @@
 package com.example.jpasecurity_filterchain.config;
 
+import com.example.jpasecurity_filterchain.filter.JWTAuthFilter;
 import com.example.jpasecurity_filterchain.service.JpaUserDetailService;
-import com.mysql.cj.protocol.AuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JpaUserDetailService jpaUserDetailService;
+    private final JWTAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(JpaUserDetailService jpaUserDetailService) {
+    public SecurityConfig(JpaUserDetailService jpaUserDetailService, JWTAuthFilter jwtAuthFilter) {
         this.jpaUserDetailService = jpaUserDetailService;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
 
@@ -40,10 +40,11 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(jpaUserDetailService)
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 //                .httpBasic(Customizer.withDefaults())
-                .formLogin()
-                .and()
+//                .formLogin()
+//                .and()
                 .build();
     }
 
