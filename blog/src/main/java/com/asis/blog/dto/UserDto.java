@@ -12,7 +12,9 @@ import java.util.List;
 public class UserDto {
     private Long userId;
     private String name;
+    private String password;
     private String email;
     private AddressDto addressDto;
     private List<BlogDto> blogDtos;
+    private List<RoleDto> roleDtos;
 }

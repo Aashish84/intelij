@@ -6,6 +6,7 @@ import com.asis.blog.service.BlogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -22,6 +23,7 @@ public class BlogController {
         return new ResponseEntity<>(blogService.addBlog(blog) , HttpStatus.CREATED);
     }
     @DeleteMapping("/blogs/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteBLog(@PathVariable("id") Long id){
         return new ResponseEntity<>( blogService.deleteBlog(id), HttpStatus.OK);
     }

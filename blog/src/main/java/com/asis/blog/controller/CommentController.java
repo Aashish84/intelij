@@ -6,6 +6,7 @@ import com.asis.blog.exception.CustomException;
 import com.asis.blog.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,6 +40,7 @@ public class CommentController {
         return new ResponseEntity<>(commentService.deleteCommentFromComment(id) , HttpStatus.OK);
     }
     @DeleteMapping("/comments/blog/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteCommentFromBlog(@PathVariable("id") Long id) throws CustomException {
         return new ResponseEntity<>(commentService.deleteCommentFromBlog(id) , HttpStatus.OK);
     }

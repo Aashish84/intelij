@@ -2,10 +2,12 @@ package com.asis.blog.controller;
 
 import com.asis.blog.entity.User;
 import com.asis.blog.exception.CustomException;
+import com.asis.blog.repository.UserRepository;
 import com.asis.blog.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +25,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable ("id") Long id){
         return new ResponseEntity<>(userService.deleteUser(id) , HttpStatus.OK);
     }
@@ -31,4 +34,5 @@ public class UserController {
     public ResponseEntity<?> updateUser(@PathVariable("id") Long id , @RequestBody User user) throws CustomException {
         return new ResponseEntity<>(userService.updateUser(id , user) , HttpStatus.OK);
     }
+
 }
