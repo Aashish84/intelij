@@ -27,27 +27,6 @@ public class SecurityConfig {
         this.jpaUserDetailService = jpaUserDetailService;
         this.jwtAuthFilter = jwtAuthFilter;
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User
-//                .withUsername("asis")
-//                .password(passwordEncoder().encode("password"))
-////                .authorities("USER")
-//                        .roles("USER")
-//                .build()
-//        );
-//        manager.createUser(
-//                User.withUsername("ram")
-//                        .password(passwordEncoder().encode("password"))
-////                        .authorities("ADMIN")
-//                        .roles("ADMIN")
-//                        .build()
-//        );
-//        return manager;
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -59,16 +38,12 @@ public class SecurityConfig {
                 .userDetailsService(jpaUserDetailService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//                .httpBasic()
-//                .and()
                 .build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

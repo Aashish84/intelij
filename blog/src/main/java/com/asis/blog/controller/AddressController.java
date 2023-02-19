@@ -17,13 +17,11 @@ public class AddressController {
     public AddressController(AddressService addressService) {
         this.addressService = addressService;
     }
-
     @GetMapping("/address")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN' , 'ROLE_USER')")
     public ResponseEntity<?> getAddresses(){
         return new ResponseEntity<>(addressService.getAllAddress() , HttpStatus.OK);
     }
-
     @PostMapping("/address")
     public ResponseEntity<?> addAddress(@RequestBody Address address){
         return new ResponseEntity<>(addressService.addAddress(address) , HttpStatus.CREATED);
