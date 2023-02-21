@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests(auth -> auth
                         .antMatchers("/token").permitAll()
+//                        .antMatchers("/address").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(jpaUserDetailService)

@@ -1,13 +1,10 @@
-package com.asis.blog.dto;
+package com.example.server_caller.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-
 @Getter
 @Setter
-
-public class AddressDto {
+public class Address {
     private Long addressId;
     private String country;
     private String province;
@@ -16,11 +13,12 @@ public class AddressDto {
     @Override
     public String toString() {
         return "{" +
+
                 "\"addressId\":\"" + addressId + "\""+
                 ","+ "\"country\":\"" + country + "\""+
                 ","+ "\"province\":\"" + province + "\""+
                 ","+ "\"district\":\"" + district + "\""+
                 "}";
-    }
 
+    }
 }

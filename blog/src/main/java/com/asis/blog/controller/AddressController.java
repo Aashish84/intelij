@@ -18,7 +18,7 @@ public class AddressController {
         this.addressService = addressService;
     }
     @GetMapping("/address")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN' , 'ROLE_USER')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN' , 'ROLE_USER')")
     public ResponseEntity<?> getAddresses(){
         return new ResponseEntity<>(addressService.getAllAddress() , HttpStatus.OK);
     }

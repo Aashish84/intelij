@@ -12,8 +12,8 @@ public class MyExceptionHandler {
         return new ResponseEntity<>(ex.getMessage() , HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleAllException(Exception ex){
-        return new ResponseEntity<>(ex.getMessage() , HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<?> handleAllException(Exception ex){
+//        return new ResponseEntity<>(ex.getMessage() , HttpStatus.BAD_REQUEST);
+//    }
 }
