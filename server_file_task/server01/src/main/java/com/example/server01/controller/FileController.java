@@ -16,6 +16,12 @@ import java.util.Base64;
 
 @RestController
 public class FileController {
+    @GetMapping("/test")
+    public ResponseEntity<?> test(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("hello from test");
+    }
+
     @GetMapping("/getfile")
     public ResponseEntity<?> getFile() throws IOException {
         File file = new File("D:\\intellij\\server_file_task\\location_a\\hello.pdf");

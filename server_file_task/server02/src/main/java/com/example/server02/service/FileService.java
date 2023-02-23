@@ -7,10 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Base64;
 import java.util.Objects;
 
 @Service
@@ -59,11 +57,33 @@ public class FileService {
         fout.close();
         return newFile;
     }
+
+    public String getAndSave() throws IOException {
+        byte[] bytes = webClient
+                .get()
+                .uri("/getfile")
+                .retrieve()
+                .bodyToMono(byte[].class)
+                .block();
+        FileOutputStream fout = new FileOutputStream("D:\\intellij\\server_file_task\\location_b\\get.pdf");
+        fout.write(Objects.requireNonNull(bytes));
+        fout.close();
+        return "file saved sucessfully";
+    }
+
+    public String get() throws IOException {
+        String fileString = webClient
+                .get()
+                .uri("/file")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        byte[] bytes = Base64.getDecoder().decode(fileString.getBytes());
+        FileOutputStream fout = new FileOutputStream("D:\\intellij\\server_file_task\\location_b\\download.pdf");
+        fout.write(bytes);
+        fout.close();
+        return "file saved sucessfully";
+    }
+
 }
-
-
-
-//        write in pdf file
-//        PDFTextStripper stripper = new PDFTextStripper();
-//        String text =  stripper.getText(document);
-//        System.out.println(text);

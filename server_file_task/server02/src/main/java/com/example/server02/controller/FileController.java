@@ -32,19 +32,6 @@ public class FileController {
         this.webClient = webClient;
     }
 
-    @GetMapping("/getfileserver01")
-    public ResponseEntity<?> getFile(){
-        Path path = Paths.get("D:\\intellij\\server_file_task\\location_b\\download.pdf");
-        Flux<DataBuffer> dataBufferFlux = webClient
-                .get()
-                .uri("/getfile")
-                .retrieve()
-                .bodyToFlux(DataBuffer.class);
-        DataBufferUtils.write(dataBufferFlux, path , StandardOpenOption.CREATE_NEW);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("file downloaded");
-    }
-
 //    all file
     @GetMapping("/getfile_server01")
     public ResponseEntity<?> getFileServer01(@RequestBody Map<String , String > requestContent) throws IOException, MimeTypeException {
@@ -59,36 +46,16 @@ public class FileController {
 //    static
     @GetMapping("/get")
     public ResponseEntity<?> get() throws IOException {
-        byte[] bytes = webClient
-                .get()
-                .uri("/getfile")
-                .retrieve()
-                .bodyToMono(byte[].class)
-                .block();
-        FileOutputStream fout = new FileOutputStream("D:\\intellij\\server_file_task\\location_b\\get.pdf");
-        fout.write(Objects.requireNonNull(bytes));
-        fout.close();
-        return ResponseEntity
+       return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("file uploaded sucessfully");
+                .body(fileService.getAndSave());
 
     }
     @GetMapping("/get02")
     public ResponseEntity<?> get02() throws IOException {
-        String fileString = webClient
-                .get()
-                .uri("/file")
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        byte[] bytes = Base64.getDecoder().decode(fileString.getBytes());
-        FileOutputStream fout = new FileOutputStream("D:\\intellij\\server_file_task\\location_b\\download.pdf");
-        fout.write(bytes);
-        fout.close();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("file uploaded sucessfully");
+                .body(fileService.get());
     }
 
 }
