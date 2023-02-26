@@ -38,7 +38,7 @@ public class FileController {
     @GetMapping("/file")
     public String get() throws IOException {
 //        File file = new File("D:\\intellij\\server_file_task\\location_a\\hello.pdf");
-        FileInputStream fin = new FileInputStream("D:\\intellij\\server_file_task\\location_a\\AashishKrThapa.pdf");
+        FileInputStream fin = new FileInputStream("D:/intellij/server_file_task/location_a/AashishKrThapa.pdf");
         byte[] fileBytes = fin.readAllBytes();
         String st = Base64.getEncoder().encodeToString(fileBytes);
         fin.close();

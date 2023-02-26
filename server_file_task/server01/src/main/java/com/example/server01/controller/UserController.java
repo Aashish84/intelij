@@ -17,10 +17,10 @@ public class UserController {
     }
     @GetMapping("/user")
     public ResponseEntity<?> allUser(){
-        return new ResponseEntity<>("userService.allUser()" , HttpStatus.OK);
+        return new ResponseEntity<>(userService.allUser() , HttpStatus.OK);
     }
     @PostMapping("/user")
     public ResponseEntity<?> addUser(@RequestBody User user){
-        return new ResponseEntity<>("userService.addUser(user)" , HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.addUser(user) , HttpStatus.CREATED);
     }
 }

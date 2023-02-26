@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.*;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -20,10 +22,11 @@ public class FileService {
         this.fileServiceHelper = fileServiceHelper;
     }
 
-    public ResponseEntity<byte[]> getFileResponseFromServer01(){
+    public ResponseEntity<byte[]> getFileResponseFromServer01(String token){
         return webClient
                 .get()
                 .uri("/getfile")
+                .header("Authorization" , token)
                 .retrieve()
                 .toEntity(byte[].class)
                 .block();
@@ -58,13 +61,28 @@ public class FileService {
         return newFile;
     }
 
-    public String getAndSave() throws IOException {
-        byte[] bytes = webClient
+    public String getAndSave(String userName , String password) throws IOException {
+//        get token
+        Map<String , String> bodyValue = new HashMap<>();
+        bodyValue.put("userName" , userName);
+        bodyValue.put("password" , password);
+
+        String token = webClient
+                .post()
+                .uri("/token")
+                .bodyValue(bodyValue)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+//  get file
+    byte[] bytes = webClient
                 .get()
                 .uri("/getfile")
+                .header("Authorization" , "Bearer "+token)
                 .retrieve()
                 .bodyToMono(byte[].class)
                 .block();
+//    save file
         FileOutputStream fout = new FileOutputStream("D:\\intellij\\server_file_task\\location_b\\get.pdf");
         fout.write(Objects.requireNonNull(bytes));
         fout.close();

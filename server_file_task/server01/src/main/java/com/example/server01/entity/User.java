@@ -16,6 +16,6 @@ public class User {
     @Column(unique = true)
     private String userName;
     private String password;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST , fetch = FetchType.EAGER)
     private List<Role> roles;
 }

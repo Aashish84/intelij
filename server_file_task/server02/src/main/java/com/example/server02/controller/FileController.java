@@ -1,41 +1,38 @@
 package com.example.server02.controller;
 
 import com.example.server02.service.FileService;
+import com.example.server02.service.TokenService;
 import org.apache.tika.mime.MimeTypeException;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 
 @RestController
 public class FileController {
     private final FileService fileService;
-    private final WebClient webClient;
-
-    public FileController(FileService fileService, WebClient webClient) {
+    private final TokenService tokenService;
+    public FileController(FileService fileService, WebClient webClient, TokenService tokenService) {
         this.fileService = fileService;
-        this.webClient = webClient;
+        this.tokenService = tokenService;
+    }
+
+    @PostMapping("/gettoken_server01")
+    public ResponseEntity<?> getTokenServerOne(@RequestParam String userName , @RequestParam String password){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(tokenService.getTokenServerOne(userName ,password));
     }
 
 //    all file
     @GetMapping("/getfile_server01")
-    public ResponseEntity<?> getFileServer01(@RequestBody Map<String , String > requestContent) throws IOException, MimeTypeException {
-        ResponseEntity<byte[]> fileResponseServer01 = fileService.getFileResponseFromServer01();
+    public ResponseEntity<?> getFileServer01(@RequestBody Map<String , String > requestContent , @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException, MimeTypeException {
+        ResponseEntity<byte[]> fileResponseServer01 = fileService.getFileResponseFromServer01(token);
         byte[] tempFileBytes = fileService.writeAndSaveFile(fileResponseServer01 , requestContent.get("content"));
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -45,12 +42,13 @@ public class FileController {
 
 //    static
     @GetMapping("/get")
-    public ResponseEntity<?> get() throws IOException {
+    public ResponseEntity<?> get(@RequestParam String userName , @RequestParam String password) throws IOException {
        return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(fileService.getAndSave());
+                .body(fileService.getAndSave(userName , password));
 
     }
+
     @GetMapping("/get02")
     public ResponseEntity<?> get02() throws IOException {
         return ResponseEntity
