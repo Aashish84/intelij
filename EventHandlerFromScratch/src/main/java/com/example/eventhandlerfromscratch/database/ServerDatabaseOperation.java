@@ -1,9 +1,9 @@
 package com.example.eventhandlerfromscratch.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
+import java.sql.*;
 import java.util.Map;
 
 public class ServerDatabaseOperation {
@@ -33,22 +33,13 @@ public class ServerDatabaseOperation {
         return resultString;
     }
 
-    public ResultSet executeQuery(String query) {
+    public ResultSet executeQuery(String query) throws SQLException {
+        ResultSet rs;
         Connection con = getMainConnection();
-        try {
-            PreparedStatement pstmt = con.prepareStatement(query);
-            return pstmt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-//      close connection
-        try {
-            con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        Statement stm = con.createStatement();
+        rs = stm.executeQuery(query);
+//        con.close();
+        return rs;
     }
 
     public int executeUpdateQuery(String query, Map<Integer, Object> params) {

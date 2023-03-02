@@ -1,0 +1,21 @@
+version: "3"
+services:
+    demo1:
+      image: asis_demo_project
+      ports:
+        - "9595:8080"
+      networks:
+        - network1
+      depends_on:
+        - mysql_db
+
+    mysql_db:
+      image: mysql:latest
+      networks:
+        - network1
+      environment:
+        MYSQL_ROOT_PASSWORD : 12345
+        MYSQL_DATABASE : myDatabase_asis
+
+networks:
+  network1:

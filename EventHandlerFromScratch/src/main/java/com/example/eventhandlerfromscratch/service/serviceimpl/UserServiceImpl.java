@@ -23,8 +23,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> allUser() throws SQLException {
         String query = "select * from user";
-        ResultSet rs = new ServerDatabaseOperation().executeQuery(query);
+        ServerDatabaseOperation serverDatabaseOperation = new ServerDatabaseOperation();
+        ResultSet rs = serverDatabaseOperation.executeQuery(query);
+//        System.out.println(rs.getInt("id"));
         List<User> list = new ArrayList<>();
+
         while (rs.next()) {
             User ob = new User();
             ob.setId(rs.getInt("id"));

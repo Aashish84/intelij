@@ -5,10 +5,13 @@ import com.example.eventhandlerfromscratch.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
+@EnableScheduling
 @RestController
 public class UserController {
     private final UserService userService;
@@ -24,8 +27,12 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userService.getAllUser());
     }
-    @GetMapping("/get")
+//    @GetMapping("/get")
+    @Scheduled(cron = "*/10 * * * * *")
     public ResponseEntity<?> allUser() throws SQLException {
+        for(User us :userService.allUser()){
+            System.out.println(us);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.allUser());
