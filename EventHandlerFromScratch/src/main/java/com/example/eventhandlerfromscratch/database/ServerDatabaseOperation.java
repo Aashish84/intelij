@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.Map;
 
 public class ServerDatabaseOperation {
+//    connection
     private Connection getMainConnection() {
         try {
             return HikariCPDataSource.getConnection();
@@ -16,6 +17,7 @@ public class ServerDatabaseOperation {
         return null;
     }
 
+//    select json_arrayagg(json_object(
     public String executeQeuryString(String query) {
         String resultString = null;
         Connection con = getMainConnection();
@@ -33,7 +35,18 @@ public class ServerDatabaseOperation {
         return resultString;
     }
 
-    public ResultSet executeQuery(String query) throws SQLException {
+    public ResultSet executeQueryCache(String query) throws SQLException {
+        Connection con = getMainConnection();
+        PreparedStatement pstmt = con.prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
+        RowSetFactory rowSetFactory = RowSetProvider.newFactory();
+        CachedRowSet cachedRowSet = rowSetFactory.createCachedRowSet();
+        cachedRowSet.populate(rs);
+        con.close();
+        return cachedRowSet;
+    }
+
+    public ResultSet executeQuery(String query ) throws SQLException {
         ResultSet rs;
         Connection con = getMainConnection();
         Statement stm = con.createStatement();

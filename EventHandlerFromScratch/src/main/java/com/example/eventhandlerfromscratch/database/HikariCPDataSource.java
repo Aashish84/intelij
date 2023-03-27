@@ -13,10 +13,10 @@ public class HikariCPDataSource {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/EventHandlerFromScratch?createDatabaseIfNotExist=true");
         config.setUsername("root");
         config.setPassword("123root!@#");
-//        config.addDataSourceProperty("cachePrepStmts" , "true");
-//        config.addDataSourceProperty("prepStmtCacheSize" , "2");
+        config.addDataSourceProperty("cachePrepStmts" , "true");
+        config.addDataSourceProperty("prepStmtCacheSize" , "2");
         config.addDataSourceProperty("prepStmtCacheSqlLimit" , "100");
-//        config.setMaximumPoolSize(1);
+        config.setMaximumPoolSize(1);
         config.setConnectionTimeout(30000);
         config.setIdleTimeout(600000);
         config.setMaxLifetime(1800000);
