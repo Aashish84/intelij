@@ -3,6 +3,7 @@ package com.example.multipledb.config;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +46,7 @@ public class SecondaryDBConfig {
 
     @Bean(name = "secondaryTransactionManager")
     @ConfigurationProperties("spring.jpa")
-    public PlatformTransactionManager transactionManager(@Qualifier("secondaryEntityManagerFactory")EntityManagerFactory entityManagerFactory){
+    public PlatformTransactionManager transactionManager(final @Qualifier("secondaryEntityManagerFactory")EntityManagerFactory entityManagerFactory){
         return new JpaTransactionManager(entityManagerFactory);
     }
 }

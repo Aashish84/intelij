@@ -19,28 +19,35 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "entityManagerFactory",
-        transactionManagerRef = "transactionManager",
-        basePackages = {"com.example.multipledb.repository.primary"}
-)
+        entityManagerFactoryRef = "primaryEntityManagerFactory",
+        transactionManagerRef = "primaryTransactionManager",
+        basePackages = {"com.example.multipledb.repository.primary"})
 public class PrimaryDBConfig {
     @Primary
-    @Bean(name="primaryProps")
+    @Bean(name = "primaryProps")
     @ConfigurationProperties("spring.datasource")
-    public DataSourceProperties dataSourceProperties(){
+//    @ConfigurationProperties
+    public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Primary
-    @Bean(name="datasource")
+    @Bean(name = "datasource")
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource datasource(@Qualifier("primaryProps") DataSourceProperties properties){
+//    @ConfigurationProperties
+    public DataSource datasource(@Qualifier("primaryProps") DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().build();
+//        return DataSourceBuilder.create()
+//                .driverClassName("com.mysql.cj.jdbc.Driver")
+//                .url("jdbc:mysql://localhost:3306/multipledbPrimary?createDatabaseIfNotExists=true")
+//                .username("root")
+//                .password("123root!@#")
+//                .build();
     }
 
     @Primary
-    @Bean(name="entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(EntityManagerFactoryBuilder builder, @Qualifier("datasource") DataSource dataSource){
+    @Bean(name = "primaryEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(EntityManagerFactoryBuilder builder, @Qualifier("datasource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
                 .packages("com.example.multipledb.entity.primary")
@@ -49,9 +56,9 @@ public class PrimaryDBConfig {
     }
 
     @Primary
-    @Bean(name = "transactionManager")
+    @Bean(name = "primaryTransactionManager")
     @ConfigurationProperties("spring.jpa")
-    public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory){
+    public PlatformTransactionManager transactionManager(final @Qualifier("primaryEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 }
