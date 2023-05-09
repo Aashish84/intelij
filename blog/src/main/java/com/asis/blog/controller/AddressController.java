@@ -3,7 +3,9 @@ package com.asis.blog.controller;
 import com.asis.blog.dto.DummyDto;
 import com.asis.blog.entity.Address;
 import com.asis.blog.service.AddressService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +28,16 @@ public class AddressController {
     public ResponseEntity<?> getAddresses(){
 //        List<DummyDto> list = Arrays.asList(new DummyDto(1L),new DummyDto(2L));
 //        return ResponseEntity.ok(list);
-        return new ResponseEntity<>(addressService.getAllAddress() , HttpStatus.OK);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        return new ResponseEntity<>(addressService.getAllAddress() ,headers, HttpStatus.OK);
+//        return ResponseEntity.ok().headers(headers).body(addressService.getAllAddress());
+        return ResponseEntity.ok(addressService.getAllAddress());
     }
     @PostMapping("/address")
     public ResponseEntity<?> addAddress(@RequestBody Address address){
-        return new ResponseEntity<>(addressService.addAddress(address) , HttpStatus.CREATED);
+//        return new ResponseEntity<>(addressService.addAddress(address) , HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressService.addAddress(address));
     }
 
 }
