@@ -1,30 +1,31 @@
 package com.example.jwt_revised_01.config;
 
-import com.example.jwt_revised_01.entity.User;
+import com.example.jwt_revised_01.entity.AuthUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class SecurityUserDetails implements UserDetails {
     private final String name;
     private final String password;
     private final List<GrantedAuthority> authorities;
-    public SecurityUserDetails(User user){
+
+    public SecurityUserDetails(AuthUser user) {
         this.name = user.getEmail();
         this.password = user.getPassword();
-        this.authorities = Stream.of("ADMIN","USER")
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
+        List<GrantedAuthority> tempAuth = new ArrayList<>();
+        user.getAuthUserRoles().forEach(e -> tempAuth.add(new SimpleGrantedAuthority(e.getRole())));
+        this.authorities = tempAuth;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return this.authorities;
     }
 
     @Override
