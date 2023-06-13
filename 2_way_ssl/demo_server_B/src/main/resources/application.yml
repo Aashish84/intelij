@@ -1,0 +1,13 @@
+server:
+  port: 9090
+  ssl:
+    enabled: true
+    client-auth: want
+    key-store: classpath:keystore/server_B_keystore.p12
+    key-store-password: server_B_keystore
+    key-store-type: PKCS12
+    key-alias: server-b
+    key-store-provider: SUN
+    trust-store: classpath:keystore/server_B_keystore.p12
+    trust-store-password: server_B_keystore
+    trust-store-type: PKCS12
