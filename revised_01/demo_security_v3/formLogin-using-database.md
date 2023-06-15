@@ -1,6 +1,7 @@
 ### Security config
+
 ```java
-import com.example.demo_security_v3.service.AuthUserDetailsService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +22,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class SecurityConfig {
     private final AuthUserDetailsService authUserDetailsService;
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -36,8 +39,9 @@ public class SecurityConfig {
                 .formLogin(Customizer.withDefaults())
                 .build();
     }
+
     @Bean
-    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder){
+    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(authUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
@@ -66,7 +70,7 @@ Spring Security provides several built-in implementations of the AuthenticationP
 ### authUserDetailsService
 
 ```java
-import com.example.demo_security_v3.config.AuthUserDetails;
+
 import com.example.demo_security_v3.entity.AuthUser;
 import com.example.demo_security_v3.repo.AuthUserRepo;
 import lombok.AllArgsConstructor;
@@ -81,12 +85,13 @@ import java.util.Optional;
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
     private final AuthUserRepo authUserRepo;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<AuthUser> byEmail = authUserRepo.findByEmail(email);
         return byEmail
                 .map(AuthUserDetails::new)
-                .orElseThrow(()->new UsernameNotFoundException("user not found or email"+email));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found or email" + email));
     }
 }
 
