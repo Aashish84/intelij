@@ -33,7 +33,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 //        TODO:validate certificate with trust-store
             System.out.println(clientCertificates.length);
 //            System.out.println(clientCertificates[1]);
-            return new UsernamePasswordAuthenticationToken("test", "test", new ArrayList<>());
+            if (isCertificateValid(clientCertificates)) {
+                return new UsernamePasswordAuthenticationToken("test", "test", new ArrayList<>());
+            }
         }
 
 //      form login
@@ -47,6 +49,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(email, password, tempAuthUserRoles);
 
         return null;
+    }
+
+    private boolean isCertificateValid(X509Certificate[] clientCertificates) {
+        return true;
     }
 
     @Override

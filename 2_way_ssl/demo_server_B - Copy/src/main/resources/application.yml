@@ -1,0 +1,13 @@
+server:
+  port: 9191
+  ssl:
+    enabled: true
+    client-auth: want
+    key-store: classpath:keystore/server-c-keystore.p12
+    key-store-password: server-c-keystore
+    key-store-type: PKCS12
+    key-alias: server-c
+    key-store-provider: SUN
+#    trust-store: classpath:keystore/server-c-keystore.p12
+#    trust-store-password: server-c-keystore
+#    trust-store-type: PKCS12
