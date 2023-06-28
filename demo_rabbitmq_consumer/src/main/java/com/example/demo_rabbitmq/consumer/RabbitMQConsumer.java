@@ -19,11 +19,11 @@ public class RabbitMQConsumer {
 //        }
         if (inspectionDtos.size() == 1) {
             InspectionDto inspectionDto = inspectionDtos.get(0);
-            LOGGER.info("Received single message -> " + inspectionDto);
+            LOGGER.warn("Received single message -> " + inspectionDto);
         } else {
             System.out.println(inspectionDtos.size());
             for (InspectionDto inspectionDto : inspectionDtos) {
-                LOGGER.info("Received message in batch -> " + inspectionDto);
+                LOGGER.warn("Received message in batch -> " + inspectionDto);
             }
         }
     }
