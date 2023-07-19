@@ -30,12 +30,12 @@ public class WebClientConfig {
     @Bean
     public WebClient getWebClient() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
         KeyStore keyStore = KeyStore.getInstance("pkcs12");
-        ClassPathResource classPathResource = new ClassPathResource("keystore/server_B_keystore.p12");
+        ClassPathResource classPathResource = new ClassPathResource("keystore/client.p12");
         InputStream inputStream = classPathResource.getInputStream();
-        keyStore.load(inputStream, "server_B_keystore".toCharArray());
+        keyStore.load(inputStream, "password".toCharArray());
 
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        keyManagerFactory.init(keyStore, "server_B_keystore".toCharArray());
+        keyManagerFactory.init(keyStore, "password".toCharArray());
 
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(keyStore);
@@ -59,7 +59,7 @@ public class WebClientConfig {
                                 .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
 
         return WebClient.builder()
-                .baseUrl("https://localhost:8080")
+                .baseUrl("https://localhost:8586")
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }

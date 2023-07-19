@@ -27,11 +27,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        System.out.println("here");
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("==============="+authHeader);
 //        certificate login
         X509Certificate[] clientCertificates = (X509Certificate[]) request.getAttribute("jakarta.servlet.request.X509Certificate");
         if (clientCertificates != null) {
-//        TODO:validate certificate with trust-store
-            System.out.println(clientCertificates.length);
 //            System.out.println(clientCertificates[1]);
             if (isCertificateValid(clientCertificates)) {
                 return new UsernamePasswordAuthenticationToken("test", "test", new ArrayList<>());
@@ -60,3 +61,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }
+
+//        TODO:validate certificate with trust-store
+//            System.out.println(clientCertificates.length);

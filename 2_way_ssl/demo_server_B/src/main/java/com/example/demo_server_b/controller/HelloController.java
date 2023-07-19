@@ -22,7 +22,7 @@ public class HelloController {
     @GetMapping("/access/server_a")
     public Mono<ResponseEntity<String>> testServerA(){
         return webClient.get()
-                .uri("/server_a/hello")
+                .uri("/private")
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(res -> ResponseEntity.ok("from server_a : "+ res))
